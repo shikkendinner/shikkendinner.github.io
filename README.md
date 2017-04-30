@@ -1,2 +1,4 @@
 # shikkendinner.github.io
-Going to Rek
+This is Ali Azhar's Github Page and Projects page. The initial page takes you to my list of projects.
+
+Enjoy!
