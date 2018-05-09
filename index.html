@@ -11,7 +11,11 @@
 	
 	<script>
 		function openToast() {
-			alert("Hello I am open");
+			if(Android) {
+				Android.showToast("Hello I am open in Android!");
+			} else {
+				alert("Hello I am open");
+			}
 		}
 	</script>
 </html>
