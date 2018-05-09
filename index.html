@@ -1,21 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="testApp">
 	<head>
 		<title>Angular JS</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
 	</head>
-	<body>
-		<button onclick="openToast()">
-			Click to Open Toast!
+	<body ng-controller="QRScannerController">
+		<button ng-click="openQRScanner()">
+			Click to Open QR Code Scanner
 		</button>
 	</body>
 	
 	<script>
-		function openToast() {
-			if(Android) {
-				Android.showToast("Hello I am open in Android!");
-			} else {
-				alert("Hello I am open");
-			}
-		}
+		var testApp = angular.module("testApp", []);
+
+		testApp.controller("QRScannerController", ["$scope", "$window", function($scope, $window) {
+			$scope.openQRScanner = function() {
+				if($window.Android) {
+					$window.Android.showToast("Hello I am open in Android!");
+				} else {
+					$window.alert("Hello I am open");
+				}
+			};
+		}]);
 	</script>
 </html>
