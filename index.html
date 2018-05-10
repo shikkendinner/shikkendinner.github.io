@@ -19,13 +19,13 @@
 		testApp.controller("QRScannerController", ["$scope", "$window", function($scope, $window) {
 			$scope.openQRScanner = function() {
 				if($window.Android) {
-					$window.Android.scanQRCode();
+					$scope.result = $window.Android.scanQRCode();
 				} else {
 					$window.alert("Hello I am an alert, how do you do?");
 				}
 			};
 
-			$scope.result = "Waiting...";
+			$scope.result = "No Scanning in Progress...";
 
 			$window.setResult = function(result) {
 				$scope.result = result;
