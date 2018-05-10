@@ -8,6 +8,9 @@
 		<button ng-click="openQRScanner()">
 			Click to Open QR Code Scanner
 		</button>
+
+		<h1>RESULTS BELOW FROM SCAN</h1>
+		<p>{{result}}</p>
 	</body>
 	
 	<script>
@@ -16,10 +19,16 @@
 		testApp.controller("QRScannerController", ["$scope", "$window", function($scope, $window) {
 			$scope.openQRScanner = function() {
 				if($window.Android) {
-					$window.Android.showToast("Hello I am open in Android!");
+					$window.Android.scanQRCode();
 				} else {
-					$window.alert("Hello I am open");
+					$window.alert("Hello I am an alert, how do you do?");
 				}
+			};
+
+			$scope.result = "Waiting...";
+
+			$window.setResult = function(result) {
+				$scope.result = result;
 			};
 		}]);
 	</script>
