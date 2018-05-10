@@ -16,19 +16,21 @@
 	<script>
 		var testApp = angular.module("testApp", []);
 
-		testApp.controller("QRScannerController", ["$scope", "$window", function($scope, $window) {
-			$scope.openQRScanner = function() {
+		testApp.controller("QRScannerController", ["$scope", "$window", ($scope, $window) => {
+			$scope.result = "No Scanning in Progress...";
+
+			$window.setResult = (result) => {
+				$scope.$apply(() => {
+					$scope.result = result;
+				});
+			};
+
+			$scope.openQRScanner = () => {
 				if($window.Android) {
 					$scope.result = $window.Android.scanQRCode();
 				} else {
 					$window.alert("Hello I am an alert, how do you do?");
 				}
-			};
-
-			$scope.result = "No Scanning in Progress...";
-
-			$window.setResult = function(result) {
-				$scope.result = result;
 			};
 		}]);
 	</script>
