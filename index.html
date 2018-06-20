@@ -11,6 +11,13 @@
 
 		<h1>RESULTS BELOW FROM SCAN</h1>
 		<p>{{result}}</p>
+		<br />
+		<hr />
+		<br />
+		<h1>INPUT FILE PLEASE</h1>
+		<button type="button" ng-click="getFileToUpload()">Test Uploading of File</button>
+		<h3>File Status</h3>
+		{{$scope.file ? $scope.file : "File not uploaded yet"}}
 	</body>
 	
 	<script>
@@ -18,6 +25,7 @@
 
 		testApp.controller("QRScannerController", ["$scope", "$window", ($scope, $window) => {
 			$scope.result = "No Scanning in Progress...";
+			$scope.file = undefined;
 
 			$window.setResult = (result) => {
 				$scope.$apply(() => {
@@ -30,6 +38,14 @@
 					$scope.result = $window.Android.scanQRCode();
 				} else {
 					$window.alert("Hello I am an alert, how do you do?");
+				}
+			};
+
+			$scope.getFileToUpload = () => {
+				if($window.Android) {
+					$window.Android.getFile();
+				} else {
+					$window.alert("Yeah you cant do that man.");
 				}
 			};
 		}]);
