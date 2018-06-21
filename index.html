@@ -41,6 +41,12 @@
 				}
 			};
 
+			$window.setFile = (file) => {
+				$scope.$apply(() => {
+					$scope.file = file;
+				});
+			}
+
 			$scope.getFileToUpload = () => {
 				if($window.Android) {
 					$window.Android.getFile();
