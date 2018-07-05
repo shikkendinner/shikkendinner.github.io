@@ -15,9 +15,9 @@
 		<hr />
 		<br />
 		<h1>INPUT FILE PLEASE</h1>
-		<button type="button" ng-click="getFileToUpload()">Test Uploading of File</button>
+		<input type="file" fileread="file"/>
 		<h3>File Status</h3>
-		{{$scope.file ? $scope.file : "File not uploaded yet"}}
+		{{file ? file.name : "File not uploaded yet"}}
 	</body>
 	
 	<script>
@@ -54,6 +54,21 @@
 					$window.alert("Yeah you cant do that man.");
 				}
 			};
+		}])
+		.directive("fileread", [function () {
+			return {
+				scope: {
+					fileread: "="
+				},
+				link: function (scope, element, attributes) {
+					element.bind("change", function (changeEvent) {
+						scope.$apply(function () {
+							scope.fileread = changeEvent.target.files[0];
+							console.warn(scope.fileread);
+						});
+					});
+				}
+			}
 		}]);
 	</script>
 </html>
