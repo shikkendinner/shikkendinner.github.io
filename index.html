@@ -35,7 +35,7 @@
 
 			$scope.openQRScanner = () => {
 				if($window.Android) {
-					$scope.result = $window.Android.scanQRCode();
+					$scope.result = $window.Android.scanCode(0, "lol", 18);
 				} else {
 					$window.alert("Hello I am an alert, how do you do?");
 				}
