@@ -18,6 +18,12 @@
 		<input type="file" fileread="file" />
 		<h3>File Status</h3>
 		{{file ? file.name : "File not uploaded yet"}}
+		<hr/>
+		<button ng-click="openSignature()">
+			Click to Signature
+		</button>
+		<h3>Signature File Status</h3>
+		{{sigFile ? sigFile.name : "File not uploaded yet"}}
 	</body>
 	
 	<script>
@@ -26,6 +32,7 @@
 		testApp.controller("QRScannerController", ["$scope", "$window", ($scope, $window) => {
 			$scope.result = "No Scanning in Progress...";
 			$scope.file = undefined;
+			$scope.sigFile = undefined;
 
 			$window.setResult = (result) => {
 				$scope.$apply(() => {
@@ -35,15 +42,23 @@
 
 			$scope.openQRScanner = () => {
 				if($window.Android) {
-					$scope.result = $window.Android.scanCode(0, "lol", 18);
+					$scope.result = $window.Android.createSignature();
 				} else {
 					$window.alert("Hello I am an alert, how do you do?");
 				}
 			};
 
-			$window.setFile = (file) => {
+			$scope.openSignature = () => {
+				if($window.Android) {
+					$window.Android.scanCode(0, "lol", 18);
+				} else {
+					$window.alert("Hello I am an alert, how do you do?");
+				}
+			};
+
+			$window.setSigFile = (file) => {
 				$scope.$apply(() => {
-					$scope.file = file;
+					$scope.sigFile = file;
 				});
 			}
 
