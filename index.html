@@ -18,7 +18,10 @@
 		<input type="file" fileread="file" />
 		<h3>File Status</h3>
 		{{file ? file.name : "File not uploaded yet"}}
-		<hr/>
+		<br />
+		<hr />
+		<br />
+		<h1>SIGNATURE TEST</h1>
 		<button ng-click="openSignature()">
 			Click to Signature
 		</button>
@@ -42,7 +45,7 @@
 
 			$scope.openQRScanner = () => {
 				if($window.Android) {
-					$scope.result = $window.Android.createSignature();
+					$scope.result = $window.Android.scanCode(0, "lol", 18);
 				} else {
 					$window.alert("Hello I am an alert, how do you do?");
 				}
@@ -50,7 +53,7 @@
 
 			$scope.openSignature = () => {
 				if($window.Android) {
-					$window.Android.scanCode(0, "lol", 18);
+					$window.Android.createSignature();
 				} else {
 					$window.alert("Hello I am an alert, how do you do?");
 				}
