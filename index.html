@@ -25,9 +25,8 @@
 		<button ng-click="openSignature()">
 			Click to Signature
 		</button>
-		<h3>Signature File Status</h3>
+		<h3>Signature File Status - V3</h3>
 		{{sigFile ? sigFile : "File not uploaded yet"}}
-		<img ng-src="{{sigFile}}" alt="No Image Yet" />
 	</body>
 	
 	<script>
@@ -62,6 +61,7 @@
 
 			$window.setResultFromAndroid = (status, file) => {
 				$scope.$apply(() => {
+					console.warn(file);
 					$scope.sigFile = file;
 				});
 			}
