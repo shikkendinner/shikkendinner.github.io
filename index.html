@@ -67,6 +67,13 @@
 				});
 			}
 
+			$window.setImageUrl = (imageUrl) => {
+				$scope.$apply(() => {
+					console.warn(imageUrl);
+					$scope.sigFile = imageUrl;
+				});
+			};
+
 			$scope.getFileToUpload = () => {
 				if($window.Android) {
 					$window.Android.getFile();
@@ -85,6 +92,10 @@
 						scope.$apply(function () {
 							scope.fileread = changeEvent.target.files[0];
 							console.warn(scope.fileread);
+
+							var imageUrl = URL.createObjectURL(scope.fileread);
+
+							setImageUrl(imageUrl);
 						});
 					});
 				}
