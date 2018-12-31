@@ -25,7 +25,7 @@
 		<button ng-click="openSignature()">
 			Click to Signature
 		</button>
-		<h3>Signature File Status - V3</h3>
+		<h3>Signature File Status - V4</h3>
 		{{sigFile ? sigFile : "File not uploaded yet"}}
 		<img style="display: block;" ng-src="{{sigFile}}" alt="no file yet" />
 	</body>
@@ -65,13 +65,11 @@
 					console.warn(file);
 					$scope.sigFile = file;
 				});
-			}
+			};
 
 			$window.setImageUrl = (imageUrl) => {
-				$scope.$apply(() => {
-					console.warn(imageUrl);
-					$scope.sigFile = imageUrl;
-				});
+				console.warn(imageUrl);
+				$scope.sigFile = imageUrl;
 			};
 
 			$scope.getFileToUpload = () => {
