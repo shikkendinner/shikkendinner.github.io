@@ -28,6 +28,13 @@
 		<h3>Signature File Status - V4</h3>
 		{{sigFile ? sigFile : "File not uploaded yet"}}
 		<img style="display: block;" ng-src="{{sigFile}}" alt="no file yet" />
+		<br />
+		<hr />
+		<br />
+		<h1>GOOGLE MAPS TEST</h1>
+		<button ng-click="openGoogleMaps()">
+			Open Google Maps
+		</button>
 	</body>
 	
 	<script>
@@ -75,6 +82,14 @@
 			$scope.getFileToUpload = () => {
 				if($window.Android) {
 					$window.Android.getFile();
+				} else {
+					$window.alert("Yeah you cant do that man.");
+				}
+			};
+
+			$scope.openGoogleMaps = () => {
+				if($window.Android) {
+					$window.Android.showDirectionsUsingGoogleMaps("225 Senlac Road, Toronto, ON M2R 1P6");
 				} else {
 					$window.alert("Yeah you cant do that man.");
 				}
