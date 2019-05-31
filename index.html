@@ -15,20 +15,24 @@
 	<h1>Test App</h1>
 	<hr />
 	<h3>Camera Upload Solution</h3>
-	<input type="file" accept="image/*" capture>
+	<input type="file" accept="image/*" multiple>
 	<h3>QR Code Scan</h3>
-	<div class="camera">
+	<button ng-click="startup()" ng-show="!streaming">Start Scanner</button>
+	<button ng-click="stop()" ng-show="streaming">Stop/Clear Scanner</button>
+	<div class="camera" ng-show="streaming">
 		<div>
 			<video id="video">Video stream not available.</video>
 		</div>
-		<div>
-			<button id="startbutton">Scan Code</button>
+		<div ng-show="!Android">
+			<button id="startbutton" ng-click="scanCode()">Scan Code</button>
 		</div>
+		<div ng-show="!Android">
+			<h4>Last scan</h4>
+			<canvas id="canvas"></canvas>
+		</div>
+		<h4>Result of the last scan</h4>
+		<div class="output">{{result}}</div>
 	</div>
-	<h4>Last scan</h4>
-	<canvas id="canvas"></canvas>
-	<h4>Result of the scan</h4>
-	<div class="output">{{result}}</div>
 </body>
 
 <script>
@@ -52,50 +56,76 @@
 		$scope.startbutton = null;
 		$scope.result = null;
 
-		$scope.startup = function () {
-			$scope.video = document.getElementById('video');
-			$scope.canvas = document.getElementById('canvas');
-			$scope.startbutton = document.getElementById('startbutton');
+		// Android 
+		$scope.Android = $window.Android;
 
-			navigator.mediaDevices.getUserMedia({
-				video: {
-					deviceId: { exact: "6a523bbda5fb8a3ece532b119f5f97580051137f1f663858a3efb721dcaeb086" }
-				},
-				audio: false
-			})
-				.then(function (stream) {
-					$scope.video.srcObject = stream;
-					$scope.video.play();
+		$scope.startup = function () {
+			if ($window.Android) {
+				$scope.setAndroidCallback(function (success, data) {
+					$scope.$apply(function () {
+						if (success) {
+							$scope.result = data;
+						} else {
+							$scope.result = "nothing returned from scanner";
+						}
+					});
+				});
+				$window.Android.scanCode(256, "Scan Something", 18);
+				$scope.streaming = true;
+			} else {
+				navigator.mediaDevices.getUserMedia({
+					video: { facingMode: "environment" },
+					audio: false
 				})
-				.catch(function (err) {
-					console.log("An error occurred: " + err);
+					.then(function (stream) {
+						$scope.video.srcObject = stream;
+						$scope.video.play();
+					})
+					.catch(function (err) {
+						console.log("An error occurred: " + err);
+					});
+
+				$scope.video.addEventListener('canplay', function (ev) {
+					if (!$scope.streaming) {
+						$scope.height = Math.floor($scope.video.videoHeight / ($scope.video.videoWidth / $scope.width));
+
+						// Firefox currently has a bug where the height can't be read from
+						// the video, so we will make assumptions if this happens.
+						if (isNaN($scope.height)) {
+							$scope.height = $scope.width / (4 / 3);
+						}
+
+						$scope.video.setAttribute('width', $scope.width);
+						$scope.video.setAttribute('height', $scope.height);
+						$scope.canvas.setAttribute('width', $scope.width);
+						$scope.canvas.setAttribute('height', $scope.height);
+
+						$scope.$apply(function () {
+							$scope.streaming = true;
+						});
+					}
+				}, false);
+
+				$scope.reset();
+			}
+		}
+
+		$scope.stop = function () {
+			if ($scope.streaming && !$window.Android) {
+				let stream = $scope.video.srcObject;
+				let tracks = stream.getTracks();
+
+				tracks.forEach(function (track) {
+					track.stop();
 				});
 
-			$scope.video.addEventListener('canplay', function (ev) {
-				if (!$scope.streaming) {
-					$scope.height = $scope.video.videoHeight / ($scope.video.videoWidth / $scope.width);
-
-					// Firefox currently has a bug where the height can't be read from
-					// the video, so we will make assumptions if this happens.
-					if (isNaN($scope.height)) {
-						$scope.height = $scope.width / (4 / 3);
-					}
-
-					$scope.video.setAttribute('width', $scope.width);
-					$scope.video.setAttribute('height', $scope.height);
-					$scope.canvas.setAttribute('width', $scope.width);
-					$scope.canvas.setAttribute('height', $scope.height);
-					$scope.streaming = true;
-				}
-			}, false);
-
-			$scope.startbutton.addEventListener('click', function (ev) {
-				$scope.scanCode();
-				ev.preventDefault();
-			}, false);
-
-			$scope.reset();
-		}
+				$scope.video.srcObject = null;
+				$scope.streaming = false;
+			} else {
+				// its Android
+				$scope.streaming = false;
+			}
+		};
 
 		$scope.reset = function () {
 			var context = $scope.canvas.getContext('2d');
@@ -106,6 +136,7 @@
 		}
 
 		$scope.scanCode = function () {
+			console.warn("Scanning for a QR Code...");
 			$scope.result = "Scanning...";
 			var context = $scope.canvas.getContext('2d');
 			if ($scope.width && $scope.height) {
@@ -114,19 +145,38 @@
 				context.drawImage($scope.video, 0, 0, $scope.width, $scope.height);
 
 				var data = context.getImageData(0, 0, $scope.width, $scope.height);
-				var code = jsQR(data, $scope.width, $scope.height);
+				var code = jsQR(data.data, $scope.width, $scope.height);
 
+				var result = "Did not find QR Code";
 				if (code) {
-					$scope.result = code.data();
-				} else {
-					$scope.result = "Did not find QR Code";
+					result = code.data;
 				}
+
+				$scope.result = result;
+				alert(result);
 			} else {
 				$scope.reset();
 			}
 		}
 
-		$window.onload = $scope.startup;
+		$window.onload = function () {
+			$scope.video = document.getElementById('video');
+			$scope.canvas = document.getElementById('canvas');
+			$scope.startbutton = document.getElementById('startbutton');
+
+			$scope.video.setAttribute('width', 0);
+			$scope.video.setAttribute('height', 0);
+			$scope.canvas.setAttribute('width', 0);
+			$scope.canvas.setAttribute('height', 0);
+		};
+
+		$scope.setAndroidCallback = function (callback) {
+			$window.androidCallback = callback;
+		};
+
+		$window.setResultFromAndroid = function (success, data) {
+			$window.androidCallback(success, data);
+		};
 	}]);
 
 </script>
