@@ -25,6 +25,7 @@
 			<button id="startbutton">Scan Code</button>
 		</div>
 	</div>
+	<h4>Last scan</h4>
 	<canvas id="canvas"></canvas>
 	<h4>Result of the scan</h4>
 	<div class="output">{{result}}</div>
@@ -112,7 +113,7 @@
 				$scope.canvas.height = $scope.height;
 				context.drawImage($scope.video, 0, 0, $scope.width, $scope.height);
 
-				var data = context.getImageData();
+				var data = context.getImageData(0, 0, $scope.width, $scope.height);
 				var code = jsQR(data, $scope.width, $scope.height);
 
 				if (code) {
