@@ -80,10 +80,10 @@
 						$scope.height = $scope.width / (4 / 3);
 					}
 
-					$scope.video.setAttribute('width', width);
-					$scope.video.setAttribute('height', height);
-					$scope.canvas.setAttribute('width', width);
-					$scope.canvas.setAttribute('height', height);
+					$scope.video.setAttribute('width', $scope.width);
+					$scope.video.setAttribute('height', $scope.height);
+					$scope.canvas.setAttribute('width', $scope.width);
+					$scope.canvas.setAttribute('height', $scope.height);
 					$scope.streaming = true;
 				}
 			}, false);
