@@ -56,7 +56,12 @@
 			$scope.canvas = document.getElementById('canvas');
 			$scope.startbutton = document.getElementById('startbutton');
 
-			navigator.mediaDevices.getUserMedia({ video: true, audio: false })
+			navigator.mediaDevices.getUserMedia({
+				video: {
+					deviceId: { exact: "6a523bbda5fb8a3ece532b119f5f97580051137f1f663858a3efb721dcaeb086" }
+				},
+				audio: false
+			})
 				.then(function (stream) {
 					$scope.video.srcObject = stream;
 					$scope.video.play();
@@ -99,7 +104,7 @@
 			$scope.result = "QR Code Scanner Not Running";
 		}
 
-		$scope.scanCode = function() {
+		$scope.scanCode = function () {
 			$scope.result = "Scanning...";
 			var context = $scope.canvas.getContext('2d');
 			if ($scope.width && $scope.height) {
@@ -110,7 +115,7 @@
 				var data = context.getImageData();
 				var code = jsQR(data, $scope.width, $scope.height);
 
-				if(code) {
+				if (code) {
 					$scope.result = code.data();
 				} else {
 					$scope.result = "Did not find QR Code";
