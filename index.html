@@ -1,18 +1,24 @@
 <!DOCTYPE html>
 <html ng-app="testApp">
-	<head>
-		<title>Angular JS</title>
-		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
-	</head>
-	<body ng-controller="TestController">
-		<input type="file">
-	</body>
-	
-	<script>
-		var testApp = angular.module("testApp", []);
 
-		testApp.controller("TestController", ["$scope", "$window", ($scope, $window) => {
-			
-		}]);
-	</script>
+<head>
+	<meta charset="utf-8">
+	<title>Angular JS</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+
+<body ng-controller="TestController">
+	<input type="file">
+</body>
+
+<script>
+	var testApp = angular.module("testApp", []);
+
+	testApp.controller("TestController", ["$scope", "$window", ($scope, $window) => {
+
+	}]);
+</script>
+
 </html>
